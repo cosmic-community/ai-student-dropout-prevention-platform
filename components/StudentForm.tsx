@@ -20,7 +20,8 @@ export default function StudentForm({ counselors }: { counselors: Counselor[] })
     part_time_job: false,
   });
   
-  const [subjects, setSubjects] = useState([
+  // Changed: Explicitly type subject to ensure required properties
+  const [subjects, setSubjects] = useState<Array<{ name: string; marks: number; grade: string }>>([
     { name: '', marks: 0, grade: '' }
   ]);
   
@@ -36,11 +37,16 @@ export default function StudentForm({ counselors }: { counselors: Counselor[] })
   
   const handleSubjectChange = (index: number, field: string, value: string | number) => {
     const updatedSubjects = [...subjects];
-    updatedSubjects[index] = {
-      ...updatedSubjects[index],
-      [field]: value
-    };
-    setSubjects(updatedSubjects);
+    // Changed: Explicitly construct the subject object with all required properties
+    const currentSubject = updatedSubjects[index];
+    if (currentSubject) {
+      updatedSubjects[index] = {
+        name: field === 'name' ? String(value) : currentSubject.name,
+        marks: field === 'marks' ? Number(value) : currentSubject.marks,
+        grade: field === 'grade' ? String(value) : currentSubject.grade
+      };
+      setSubjects(updatedSubjects);
+    }
   };
   
   const addSubject = () => {
