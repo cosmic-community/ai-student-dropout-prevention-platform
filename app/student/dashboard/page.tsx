@@ -12,6 +12,7 @@ export default async function StudentDashboardPage() {
   let recommendations: Recommendation[] = [];
   
   try {
+    // Changed: Properly await the Cosmic SDK query
     const assessments = await safeCosmicCall<RiskAssessment>(() =>
       cosmic.objects.find({
         type: 'risk-assessments',

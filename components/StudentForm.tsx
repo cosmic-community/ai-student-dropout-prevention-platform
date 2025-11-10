@@ -72,12 +72,12 @@ export default function StudentForm({ counselors }: { counselors: Counselor[] })
       
       const prediction = await predictionResponse.json();
       
-      // Changed: Filter subjects and ensure all required properties are present
+      // Changed: Ensure all subject properties are strings/numbers (not undefined)
       const validSubjects = subjects
-        .filter(s => s.name && s.marks !== undefined)
+        .filter(s => s.name && s.marks !== undefined && s.marks !== null)
         .map(s => ({
-          name: s.name || '',
-          marks: s.marks || 0,
+          name: s.name,
+          marks: s.marks,
           grade: s.grade || ''
         }));
       

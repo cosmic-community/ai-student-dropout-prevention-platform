@@ -12,12 +12,13 @@ function hasStatus(error: unknown): error is { status: number } {
 }
 
 // Helper function for safe API calls
+// Changed: Fixed return type to properly handle the Cosmic SDK response
 export async function safeCosmicCall<T>(
-  apiCall: () => Promise<{ objects: T[] }>
+  apiCall: () => any
 ): Promise<T[]> {
   try {
     const response = await apiCall();
-    return response.objects;
+    return response.objects || [];
   } catch (error) {
     if (hasStatus(error) && error.status === 404) {
       return [];
