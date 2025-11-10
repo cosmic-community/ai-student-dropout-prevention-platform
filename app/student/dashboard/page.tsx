@@ -19,15 +19,19 @@ export default async function StudentDashboardPage() {
       }).props(['id', 'title', 'slug', 'metadata']).depth(1)
     );
     
+    // Changed: Use null instead of undefined to match type definition
     if (assessments.length > 0) {
-      assessment = assessments[0];
+      assessment = assessments[0] ?? null;
       
-      recommendations = await safeCosmicCall<Recommendation>(() =>
-        cosmic.objects.find({
-          type: 'recommendations',
-          'metadata.risk_assessment': assessment!.id
-        }).props(['id', 'title', 'slug', 'metadata']).depth(1)
-      );
+      // Changed: Only fetch recommendations if assessment exists
+      if (assessment) {
+        recommendations = await safeCosmicCall<Recommendation>(() =>
+          cosmic.objects.find({
+            type: 'recommendations',
+            'metadata.risk_assessment': assessment!.id
+          }).props(['id', 'title', 'slug', 'metadata']).depth(1)
+        );
+      }
     }
   } catch (error) {
     // Handle errors

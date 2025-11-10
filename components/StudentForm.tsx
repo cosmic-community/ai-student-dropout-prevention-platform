@@ -72,10 +72,19 @@ export default function StudentForm({ counselors }: { counselors: Counselor[] })
       
       const prediction = await predictionResponse.json();
       
+      // Changed: Filter subjects and ensure all required properties are present
+      const validSubjects = subjects
+        .filter(s => s.name && s.marks !== undefined)
+        .map(s => ({
+          name: s.name || '',
+          marks: s.marks || 0,
+          grade: s.grade || ''
+        }));
+      
       // Create student with risk assessment
       const studentData = {
         ...formData,
-        subjects: subjects.filter(s => s.name && s.marks)
+        subjects: validSubjects
       };
       
       // In production, create student and assessment via API
